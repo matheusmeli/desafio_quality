@@ -3,17 +3,21 @@ package br.com.mercadolivre.desafioquality.resources;
 
 import br.com.mercadolivre.desafioquality.entities.Property;
 import br.com.mercadolivre.desafioquality.entities.Room;
+import br.com.mercadolivre.desafioquality.exceptions.InvalidDistrictException;
 import br.com.mercadolivre.desafioquality.repositories.PropertyRepository;
 import br.com.mercadolivre.desafioquality.services.PropertyService;
 import br.com.mercadolivre.desafioquality.util.TestUtilGenerator;
+import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.StringJoiner;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 public class PropertyResourceTests {
@@ -58,13 +62,12 @@ public class PropertyResourceTests {
         assertEquals(61, body);
     }
 
-    @Test
+    @Test()
     public void testPropertyWithInvalidDistrict(){
         Property propertyWithInvalidDistrict = TestUtilGenerator.getPropertyWithInvalidDistrict();
 
-        String body = propertyResource.insertNewProperty(propertyWithInvalidDistrict).getBody().toString();
-
-        assertEquals("Invalid district", body);
+        assertThrows(InvalidDistrictException.class,
+                () -> propertyResource.insertNewProperty(propertyWithInvalidDistrict).getBody().toString());
     }
 
     @Test
